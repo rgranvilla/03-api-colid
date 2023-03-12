@@ -15,7 +15,7 @@ interface CreateGymUseCaseResponse {
 
 export class CreateGymUseCase {
   constructor(private gymsRepository: GymsRepository) {}
-  
+
   async execute({
     title,
     description,
@@ -29,7 +29,7 @@ export class CreateGymUseCase {
       phone,
       latitude,
       longitude,
-    }); 
+    });
 
     return {
       gym,

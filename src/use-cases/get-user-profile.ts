@@ -6,23 +6,23 @@ interface GetUserProfileUseCaseRequest {
   userId: string;
 }
 interface GetUserProfileUseCaseResponse {
-  user: User
+  user: User;
 }
 
 export class GetUserProfileUseCase {
-  constructor(
-    private usersRepository: UsersRepository,
-  ) {}
+  constructor(private usersRepository: UsersRepository) {}
 
-  async execute({userId}: GetUserProfileUseCaseRequest): Promise<GetUserProfileUseCaseResponse> {
+  async execute({
+    userId,
+  }: GetUserProfileUseCaseRequest): Promise<GetUserProfileUseCaseResponse> {
     const user = await this.usersRepository.findById(userId);
 
-    if(!user) {
+    if (!user) {
       throw new ResourceNotFoundError();
     }
 
     return {
-      user
+      user,
     };
   }
 }

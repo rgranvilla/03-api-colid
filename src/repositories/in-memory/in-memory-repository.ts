@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 
 export class InMemoryUsersRepository implements UsersRepository {
   private items: User[] = [];
-  
+
   async findById(userId: string): Promise<User | null> {
     return this.items.find((user) => user.id === userId) || null;
   }
@@ -19,7 +19,7 @@ export class InMemoryUsersRepository implements UsersRepository {
       name: data.name,
       email: data.email,
       password_hash: data.password_hash,
-      created_at: new Date()
+      created_at: new Date(),
     };
 
     this.items.push(user);

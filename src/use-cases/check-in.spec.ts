@@ -1,4 +1,4 @@
-import { beforeEach, afterEach, describe, expect, it, vi} from 'vitest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { CheckInUseCase } from './check-in';
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository';
@@ -11,12 +11,12 @@ let checkInsRepository: InMemoryCheckInsRepository;
 let gymsRepository: InMemoryGymsRepository;
 let sut: CheckInUseCase;
 
-describe('Check-in Use Case', ()=>{
-  beforeEach(async ()=>{
+describe('Check-in Use Case', () => {
+  beforeEach(async () => {
     checkInsRepository = new InMemoryCheckInsRepository();
     gymsRepository = new InMemoryGymsRepository();
     sut = new CheckInUseCase(checkInsRepository, gymsRepository);
-    
+
     await gymsRepository.create({
       id: 'gym-01',
       title: 'JavaScript Gym',
@@ -29,13 +29,12 @@ describe('Check-in Use Case', ()=>{
     vi.useFakeTimers();
   });
 
-  afterEach(()=> {
+  afterEach(() => {
     vi.useRealTimers();
   });
 
-
   it('should be able to check in', async () => {
-    const {checkIn} = await sut.execute({
+    const { checkIn } = await sut.execute({
       gymId: 'gym-01',
       userId: 'user-01',
       userLatitude: -30.0192942,
@@ -52,7 +51,8 @@ describe('Check-in Use Case', ()=>{
         userId: 'user-01',
         userLatitude: -30.0192942,
         userLongitude: -51.1540702,
-      })).rejects.toBeInstanceOf(ResourceNotFoundError);
+      }),
+    ).rejects.toBeInstanceOf(ResourceNotFoundError);
   });
 
   it('should not be able to check in twice in the same day', async () => {
@@ -77,24 +77,23 @@ describe('Check-in Use Case', ()=>{
 
   it('should be able to check in twice but in different days', async () => {
     vi.setSystemTime(new Date(2022, 0, 20, 8, 0, 0));
-    
+
     await sut.execute({
       gymId: 'gym-01',
       userId: 'user-01',
       userLatitude: -30.0192942,
       userLongitude: -51.1540702,
     });
-    
+
     vi.setSystemTime(new Date(2022, 0, 21, 8, 0, 0));
 
-    
-    const {checkIn} = await sut.execute({
+    const { checkIn } = await sut.execute({
       gymId: 'gym-01',
       userId: 'user-01',
       userLatitude: -30.0192942,
       userLongitude: -51.1540702,
     });
-    
+
     expect(checkIn.id).toEqual(expect.any(String));
   });
 
@@ -108,7 +107,7 @@ describe('Check-in Use Case', ()=>{
       longitude: -51.1478115,
     });
 
-    await expect(async()=>{
+    await expect(async () => {
       await sut.execute({
         gymId: 'gym-02',
         userId: 'user-01',

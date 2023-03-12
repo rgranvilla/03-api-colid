@@ -8,29 +8,27 @@ interface ValidateCheckInUseCaseRequest {
   checkInId: string;
 }
 interface ValidateCheckInUseCaseResponse {
-  checkIn: CheckIn
+  checkIn: CheckIn;
 }
 
 export class ValidateCheckInUseCase {
-  constructor(
-    private checkInRepository: CheckInsRepository,
-  ) {}
+  constructor(private checkInRepository: CheckInsRepository) {}
 
   async execute({
     checkInId,
   }: ValidateCheckInUseCaseRequest): Promise<ValidateCheckInUseCaseResponse> {
     const checkIn = await this.checkInRepository.findById(checkInId);
 
-    if(!checkIn) {
+    if (!checkIn) {
       throw new ResourceNotFoundError();
     }
 
     const distanceInMinutesFromCheckInCreation = dayjs(new Date()).diff(
       checkIn.created_at,
-      'minutes'
+      'minutes',
     );
 
-    if(distanceInMinutesFromCheckInCreation > 20) {
+    if (distanceInMinutesFromCheckInCreation > 20) {
       throw new LateCheckInValidationError();
     }
 
@@ -39,7 +37,7 @@ export class ValidateCheckInUseCase {
     await this.checkInRepository.save(checkIn);
 
     return {
-      checkIn
+      checkIn,
     };
   }
 }

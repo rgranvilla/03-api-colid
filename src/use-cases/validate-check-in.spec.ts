@@ -1,4 +1,4 @@
-import { beforeEach, afterEach, describe, expect, it, vi} from 'vitest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository';
 import { ValidateCheckInUseCase } from './validate-check-in';
@@ -8,18 +8,17 @@ import { LateCheckInValidationError } from './errors/late-check-in-validation-er
 let checkInsRepository: InMemoryCheckInsRepository;
 let sut: ValidateCheckInUseCase;
 
-describe('Validate Check-in Use Case', ()=>{
-  beforeEach(async ()=>{
+describe('Validate Check-in Use Case', () => {
+  beforeEach(async () => {
     checkInsRepository = new InMemoryCheckInsRepository();
     sut = new ValidateCheckInUseCase(checkInsRepository);
 
     vi.useFakeTimers();
   });
 
-  afterEach(()=> {
+  afterEach(() => {
     vi.useRealTimers();
   });
-
 
   it('should be able to validate the check-in', async () => {
     const createdCheckIn = await checkInsRepository.create({
@@ -27,7 +26,7 @@ describe('Validate Check-in Use Case', ()=>{
       user_id: 'user-01',
     });
 
-    const {checkIn} = await sut.execute({
+    const { checkIn } = await sut.execute({
       checkInId: createdCheckIn.id,
     });
 
@@ -36,8 +35,6 @@ describe('Validate Check-in Use Case', ()=>{
   });
 
   it('should not be able to validate an inexistent check-in', async () => {
-    
-
     await expect(async () => {
       await sut.execute({
         checkInId: 'inexistent-check-in-id',
@@ -57,7 +54,7 @@ describe('Validate Check-in Use Case', ()=>{
 
     vi.advanceTimersByTime(twentyOneMinutesInMs);
 
-    await expect(async ()=> {
+    await expect(async () => {
       await sut.execute({
         checkInId: createdCheckIn.id,
       });
